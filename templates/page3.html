@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block tittle %}
+<title>選擇地區</title>
+{% endblock %}
+
+{% block content %}
+<div class="text-bg-primary p-3 fs-1">
+    分析該產業在該地區的成長折線圖
+</div>
+<div class="container">
+    <h2>請選擇地區</h2>
+    <form action="/page3" method="post">
+        縣市名稱: 
+        <select class="form-select" id="city" name="city">
+            <option value="">請選擇</option>
+        </select>
+        <br>
+        鄉鎮市區名稱: (先隱藏，選完縣市名稱後再出現)
+        <select class="form-select" id="district" name="district" style="display:none;">
+        </select>
+        <br>
+        行業名稱: (先隱藏，選完鄉鎮市區名稱後再出現)
+        <select class="form-select" id="industry" name="industry" style="display:none;">
+        </select>
+        <br>
+        <input class="btn btn-outline-success" type="submit" name="send" value="送出">
+    </form>
+
+    <script type='text/javascript'>
+        // $SCRIPT_ROOT 是路徑
+        $SCRIPT_ROOT = {{ request.script_root | tojson | safe }};
+        $(document).ready(function () {
+            $.ajax({
+                type: "GET",
+                url: $SCRIPT_ROOT + "/getCity",
+                dataType: "json",
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    $.each(data, function (key, value) {
+                        console.log(key, value);
+                        $('#city').append('<option value="' + value + '">' + value + '</option>');
+                    });
+                },
+                error: function (request, error) {
+                    alert("request failed!");
+                }
+            });
+
+
+            $("#city").change(function () {
+                var form_data = new FormData();
+                form_data.append('city', $("#city").val()); //取得縣市
+
+                $("#district").empty(); //清空上次的值
+                $("#industry").empty(); //清空上次的值
+                $("#district").css("display", "inline"); //顯現
+                $.ajax({
+                    type: "POST",
+                    url: $SCRIPT_ROOT + "/getDistrict",
+                    data: form_data,
+                    dataType: "json",
+                    contentType: false,
+                    processData: false,
+                    // dataType是從server回傳的response_data type (dataType: "text json")(text to json)
+                    success: function (data) {
+                        $.each(data, function (key, value) {
+                            // 這裡key其實是index，如果data是dict，key就是key
+                            console.log(key, value);
+                            $('#district').append('<option value="' + value + '">' + value + '</option>');
+                        });
+                    },
+                    error: function (request, error) {
+                        alert("request failed!");
+                    }
+                });
+            });
+
+
+            $("#district").change(function () {
+                var form_data = new FormData();
+                form_data.append('city', $("#city").val()); //取得縣市
+                form_data.append('district', $("#district").val()); //取得鄉鎮市區名稱
+
+                $("#industry").empty(); //清空上次的值
+                $("#industry").css("display", "inline"); //顯現
+                $.ajax({
+                    type: "POST",
+                    url: $SCRIPT_ROOT + "/getIndustry",
+                    data: form_data,
+                    dataType: "json",
+                    contentType: false,
+                    processData: false,
+                    // dataType是從server回傳的response_data type (dataType: "text json")(text to json)
+                    success: function (data) {
+                        $.each(data, function (key, value) {
+                            // 這裡key其實是index，如果data是dict，key就是key
+                            console.log(key, value);
+                            $('#industry').append('<option value="' + value + '">' + value + '</option>');
+                        });
+                    },
+                    error: function (request, error) {
+                        alert("request failed!");
+                    }
+                });
+            });
+        });
+    </script>
+</div>
+{% endblock %}

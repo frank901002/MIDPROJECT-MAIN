@@ -1,0 +1,206 @@
+{% extends "base.html" %}
+
+{% block tittle %}
+<title>月成長率長條圖比較</title>
+{% endblock %}
+
+{% block content %}
+<div class="text-bg-primary p-3 fs-1">
+    比較2個不同地區產業的月成長率長條圖
+</div>
+<div class="container">
+    <form action="/monthlyGrowthRateVS" method="get">
+        <div class="container">
+            <h2>請選擇地區1</h2>
+            縣市名稱: 
+            <select class="form-select" id="city1" name="city1">
+                <option value="">請選擇</option>
+            </select>
+            <br>
+            鄉鎮市區名稱: (先隱藏，選完縣市名稱後再出現)
+            <select class="form-select" id="district1" name="district1" style="display:none;">
+            </select>
+            <br>
+            行業名稱: (先隱藏，選完鄉鎮市區名稱後再出現)
+            <select class="form-select" id="industry1" name="industry1" style="display:none;">
+            </select>
+            <br>
+        </div>
+        <div class="container">
+            <h2>請選擇地區2</h2>
+            縣市名稱: 
+            <select class="form-select" id="city2" name="city2">
+                <option value="">請選擇</option>
+            </select>
+            <br>
+            鄉鎮市區名稱: (先隱藏，選完縣市名稱後再出現)
+            <select class="form-select" id="district2" name="district2" style="display:none;">
+            </select>
+            <br>
+            行業名稱: (先隱藏，選完鄉鎮市區名稱後再出現)
+            <select class="form-select" id="industry2" name="industry2" style="display:none;">
+            </select>
+            <br>
+        </div>
+
+        <button class="btn btn-outline-success" type="submit">送出</button>
+    </form>
+
+    <script type='text/javascript'>
+        // $SCRIPT_ROOT 是路徑
+        $SCRIPT_ROOT = {{ request.script_root | tojson | safe }};
+        $(document).ready(function () {
+            $.ajax({
+                type: "GET",
+                url: $SCRIPT_ROOT + "/getCity",
+                dataType: "json",
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    $.each(data, function (key, value) {
+                        console.log(key, value);
+                        $('#city1').append('<option value="' + value + '">' + value + '</option>');
+                    });
+                },
+                error: function (request, error) {
+                    alert("request failed!");
+                }
+            });
+
+
+            $("#city1").change(function () {
+                var form_data1 = new FormData();
+                form_data1.append('city', $("#city1").val()); //取得縣市
+
+                $("#district1").empty(); //清空上次的值
+                $("#industry1").empty(); //清空上次的值
+                $("#district1").css("display", "inline"); //顯現
+                $.ajax({
+                    type: "POST",
+                    url: $SCRIPT_ROOT + "/getDistrict",
+                    data: form_data1,
+                    dataType: "json",
+                    contentType: false,
+                    processData: false,
+                    // dataType是從server回傳的response_data type (dataType: "text json")(text to json)
+                    success: function (data) {
+                        $.each(data, function (key, value) {
+                            // 這裡key其實是index，如果data是dict，key就是key
+                            console.log(key, value);
+                            $('#district1').append('<option value="' + value + '">' + value + '</option>');
+                        });
+                    },
+                    error: function (request, error) {
+                        alert("request failed!");
+                    }
+                });
+            });
+
+
+            $("#district1").change(function () {
+                var form_data1 = new FormData();
+                form_data1.append('city', $("#city1").val()); //取得縣市
+                form_data1.append('district', $("#district1").val()); //取得鄉鎮市區名稱
+
+                $("#industry1").empty(); //清空上次的值
+                $("#industry1").css("display", "inline"); //顯現
+                $.ajax({
+                    type: "POST",
+                    url: $SCRIPT_ROOT + "/getIndustry",
+                    data: form_data1,
+                    dataType: "json",
+                    contentType: false,
+                    processData: false,
+                    // dataType是從server回傳的response_data type (dataType: "text json")(text to json)
+                    success: function (data) {
+                        $.each(data, function (key, value) {
+                            // 這裡key其實是index，如果data是dict，key就是key
+                            console.log(key, value);
+                            $('#industry1').append('<option value="' + value + '">' + value + '</option>');
+                        });
+                    },
+                    error: function (request, error) {
+                        alert("request failed!");
+                    }
+                });
+            });
+            
+            $.ajax({
+                type: "GET",
+                url: $SCRIPT_ROOT + "/getCity",
+                dataType: "json",
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    $.each(data, function (key, value) {
+                        console.log(key, value);
+                        $('#city2').append('<option value="' + value + '">' + value + '</option>');
+                    });
+                },
+                error: function (request, error) {
+                    alert("request failed!");
+                }
+            });
+
+
+            $("#city2").change(function () {
+                var form_data2 = new FormData();
+                form_data2.append('city', $("#city2").val()); //取得縣市
+
+                $("#district2").empty(); //清空上次的值
+                $("#industry2").empty(); //清空上次的值
+                $("#district2").css("display", "inline"); //顯現
+                $.ajax({
+                    type: "POST",
+                    url: $SCRIPT_ROOT + "/getDistrict",
+                    data: form_data2,
+                    dataType: "json",
+                    contentType: false,
+                    processData: false,
+                    // dataType是從server回傳的response_data type (dataType: "text json")(text to json)
+                    success: function (data) {
+                        $.each(data, function (key, value) {
+                            // 這裡key其實是index，如果data是dict，key就是key
+                            console.log(key, value);
+                            $('#district2').append('<option value="' + value + '">' + value + '</option>');
+                        });
+                    },
+                    error: function (request, error) {
+                        alert("request failed!");
+                    }
+                });
+            });
+
+
+            $("#district2").change(function () {
+                var form_data2 = new FormData();
+                form_data2.append('city', $("#city2").val()); //取得縣市
+                form_data2.append('district', $("#district2").val()); //取得鄉鎮市區名稱
+
+                $("#industry2").empty(); //清空上次的值
+                $("#industry2").css("display", "inline"); //顯現
+                $.ajax({
+                    type: "POST",
+                    url: $SCRIPT_ROOT + "/getIndustry",
+                    data: form_data2,
+                    dataType: "json",
+                    contentType: false,
+                    processData: false,
+                    // dataType是從server回傳的response_data type (dataType: "text json")(text to json)
+                    success: function (data) {
+                        $.each(data, function (key, value) {
+                            // 這裡key其實是index，如果data是dict，key就是key
+                            console.log(key, value);
+                            $('#industry2').append('<option value="' + value + '">' + value + '</option>');
+                        });
+                    },
+                    error: function (request, error) {
+                        alert("request failed!");
+                    }
+                });
+            });
+
+        });
+    </script>
+</div>
+{% endblock %}

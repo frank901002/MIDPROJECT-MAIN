@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block tittle %}
+<title>各鄉鎮市區的占比</title>
+{% endblock %}
+
+{% block content %}
+<div class="text-bg-primary p-3 fs-1">
+    分析指定縣市指定產業在各鄉鎮市區的占比
+</div>
+<div class="container">
+    <p>縣市名稱: {{ city }}</p>
+    <p>行業名稱: {{ industry }}</p>
+    <h2>平均開立張數地區分布</h2>
+    <div id='chart1' class="chart"></div>
+    <h2>平均開立金額地區分布</h2>
+    <div id='chart2' class="chart"></div>
+    <h2>平均客單價地區分布</h2>
+    <div id='chart3' class="chart"></div>
+    <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
+    <script type='text/javascript'>
+        var graphs1 = {{graphJSON1 | safe}};
+        Plotly.plot('chart1',graphs1,{});
+
+        var graphs2 = {{graphJSON2 | safe}};
+        Plotly.plot('chart2',graphs2,{});
+
+        var graphs3 = {{graphJSON3 | safe}};
+        Plotly.plot('chart3',graphs3,{});
+    </script>
+</div>
+{% endblock %}

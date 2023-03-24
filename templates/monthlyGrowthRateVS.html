@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block tittle %}
+<title>比較兩個地區同產業的成長率</title>
+{% endblock %}
+
+{% block content %}
+<div class="text-bg-primary p-3 fs-1">
+    比較兩個地區同產業的成長率
+</div>
+<div class="container">
+    <div class="container">
+        <h3>1</h3>
+        <p>縣市名稱: {{ city1 }}</p>
+        <p>鄉鎮市區名稱: {{ district1 }}</p>
+        <p>行業名稱: {{ industry1 }}</p>
+    </div>
+
+    <div class="container">
+        <h3>2</h3>
+        <p>縣市名稱: {{ city2 }}</p>
+        <p>鄉鎮市區名稱: {{ district2 }}</p>
+        <p>行業名稱: {{ industry2 }}</p>
+    </div>
+    
+
+    <h2>平均開立張數月成長率比較</h2>
+    <div id='chart1' class="chart"></div>
+    <h2>平均開立金額月成長率比較</h2>
+    <div id='chart2' class="chart"></div>
+    <h2>平均客單價月成長率比較</h2>
+    <div id='chart3' class="chart"></div>
+    <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
+    <script type='text/javascript'>
+        var graphs1 = {{graphJSON1 | safe}};
+        Plotly.plot('chart1',graphs1,{});
+
+        var graphs2 = {{graphJSON2 | safe}};
+        Plotly.plot('chart2',graphs2,{});
+
+        var graphs3 = {{graphJSON3 | safe}};
+        Plotly.plot('chart3',graphs3,{});
+    </script>
+</div>
+{% endblock %}

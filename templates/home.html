@@ -1,0 +1,18 @@
+{% extends 'base.html'%}
+
+{% block tittle %}
+<title>消費風向站</title>
+{% endblock %}
+
+{% block content %}
+<div class="text-bg-primary fs-1 text-center">歡迎來到消費風向站</div>
+<div class="container">
+    <div class="row justify-content-around text-center">
+        <a href="./pieChartASelectDistrict" role="button" class="btn btn-outline-success col-4 p-3 fs-2">1. 分析指定縣市、鄉鎮市區各產業的占比</a>
+        <a href="./pieChartBSelectDistrict" role="button" class="btn btn-outline-success col-4 p-3 fs-2">2. 分析指定縣市、產業在各鄉鎮市區的占比</a>
+        <a href="./page3" role="button" class="btn btn-outline-success col-4 p-3 fs-2">3. 指定縣市、鄉鎮市區、產業的成長折線圖</a>
+        <a href="./selectDistrict" role="button" class="btn btn-outline-success col-4 p-3 fs-2">4. 分析該產業在該地區的月成長率長條圖</a>
+        <a href="./selectDistrictVS" role="button" class="btn btn-outline-success col-4 p-3 fs-2">5. 比較2個不同地區產業的月成長率長條圖</a>
+    </div>
+    
+{% endblock %}

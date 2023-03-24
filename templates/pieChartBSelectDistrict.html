@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block tittle %}
+<title>各鄉鎮市區的占比</title>
+{% endblock %}
+
+{% block content %}
+<div class="text-bg-primary p-3 fs-1">
+    分析指定縣市指定產業在各鄉鎮市區的占比
+</div>
+<div class="container">
+    <h2>請選擇地區</h2>
+
+    <form action="/pieChartB" method="get">
+        城市
+        <select class="form-select" id = "city" name="city">
+          <option value = "" >請選擇</option>
+        </select>
+        <br>
+       
+        產業
+        <select class="form-select" id = "industry" name="industry">
+          <option value = "" >請選擇</option>
+          <option value = "百貨公司" >百貨公司</option>
+          <option value = "住宿服務業" >住宿服務業</option>
+          <option value = "便利商店" >便利商店</option>
+          <option value = "食品、飲料及菸草製品零售業" >食品、飲料及菸草製品零售業</option>
+          <option value = "超級市場" >超級市場</option>
+          <option value = "零售式量販店" >零售式量販店</option>
+          <option value = "綜合商品零售業" >綜合商品零售業</option>
+          <option value = "餐飲業" >餐飲業</option>
+        </select>
+        <br>
+        <button class="btn btn-outline-success" type="submit">確認</button>
+      </form>
+
+
+    <script type='text/javascript'>
+        // $SCRIPT_ROOT 是路徑
+        $SCRIPT_ROOT = {{ request.script_root | tojson | safe }};
+        $(document).ready(function () {
+            $.ajax({
+                type: "GET",
+                url: $SCRIPT_ROOT + "/getCity",
+                dataType: "json",
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    $.each(data, function (key, value) {
+                        console.log(key, value);
+                        $('#city').append('<option value="' + value + '">' + value + '</option>');
+                    });
+                },
+                error: function (request, error) {
+                    alert("request failed!");
+                }
+            });
+        });
+    </script>
+</div>
+{% endblock %}
